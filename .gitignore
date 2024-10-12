@@ -1,0 +1,4 @@
+/objectdetect/__pycache__
+.vscode
+
+data/yolov3.weights
