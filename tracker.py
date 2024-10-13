@@ -25,7 +25,9 @@ def detect(images: Annotated[str, typer.Argument(help="Image file or a directory
            nms_thresh: Annotated[float, typer.Argument(
                help="NMS Threshold")] = 0.4,
            cfg: Annotated[str, typer.Argument(
-               help="Configuration file location")] = "cfg/yolov3.cfg",
+               help="Configuration file location")] = "yolov3",
+           method: Annotated[str, typer.Argument(
+               help="Testing or training")] = "testing",
            weights: Annotated[str, typer.Argument(
                help="The location of the weights file.")] = "data/yolov3.weights",
            reso: Annotated[int, typer.Argument(help="The resolution of the input image, should be a number divisible by 32.")] = 416):
@@ -35,9 +37,20 @@ def detect(images: Annotated[str, typer.Argument(help="Image file or a directory
     num_classes = 80  # For COCO
     classes = load_classes("data/coco.names")
 
+    if method == "training":
+        cfg = cfg + "_training.cfg"
+    elif method == "testing":
+        cfg = cfg + "_training.cfg"
+
+    config_file = os.path.join('cfg', cfg)
+
+    if not os.path.exists(config_file):
+        print(f"Failed to load configuration file from {config_file}.")
+        return
+
     # Set up the neural network
     print("Loading network.....")
-    model = Darknet(cfg)
+    model = Darknet(config_file)
     model.load_weights(weights)
     print("Network successfully loaded")
 

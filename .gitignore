@@ -2,3 +2,4 @@
 .vscode
 
 data/yolov3.weights
+activate.ps1
